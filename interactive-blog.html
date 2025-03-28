@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wanderlust Chronicles: A Travel Blog</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .blog-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+
+        .blog-header {
+            background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            transform: translateZ(50px);
+        }
+
+        .blog-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .blog-header p {
+            opacity: 0.8;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .blog-post {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .blog-post:hover {
+            transform: scale(1.05);
+        }
+
+        .blog-post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-post:hover .blog-post-image {
+            transform: scale(1.1);
+        }
+
+        .blog-post h2 {
+            margin-bottom: 10px;
+            will-change: contents;
+        }
+
+        .blog-post p {
+            will-change: contents;
+        }
+
+        .read-more {
+            display: inline-block;
+            background: #2575fc;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            background: #6a11cb;
+            transform: translateY(-5px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-container" id="blogContainer">
+        <div class="blog-header">
+            <h1>Wanderlust Chronicles</h1>
+            <p>Exploring the World, One Story at a Time</p>
+        </div>
+        <div class="blog-posts" id="blogPosts">
+            <!-- Blog posts will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Blog post data with direct image URLs
+        const blogPosts = [
+            {
+                title: "Mystical Machu Picchu",
+                excerpt: "An incredible journey through the ancient Inca ruins high in the Peruvian Andes.",
+                image: "https://images.unsplash.com/photo-1526392060635-9d6019884377?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+                fullContent: "Nestled high in the Peruvian Andes, Machu Picchu remains one of the most breathtaking archaeological sites in the world. As the morning mist parts, revealing intricate stone structures, you're transported back in time to the height of the Inca civilization."
+            },
+            {
+                title: "Tokyo's Hidden Gems",
+                excerpt: "Discovering the secret neighborhoods and cultural treasures of Japan's vibrant capital.",
+                image: "https://images.unsplash.com/photo-1545569341-9eb8b30c6338?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+                fullContent: "Beyond the neon lights and bustling streets, Tokyo harbors countless hidden gems. From tiny izakayas tucked away in narrow alleys to serene traditional gardens, the city is a labyrinth of unexpected wonders waiting to be explored."
+            },
+            {
+                title: "Safari Adventures in Kenya",
+                excerpt: "A breathtaking journey through the wildlife-rich landscapes of the Masai Mara.",
+                image: "https://images.unsplash.com/photo-1547720074-e45de2ece910?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+                fullContent: "The golden savannah stretches endlessly, punctuated by acacia trees and roaming herds of wildlife. Every moment on a Kenyan safari is a testament to the raw, untamed beauty of nature."
+            }
+        ];
+
+        // Function to create blog post elements
+        function renderBlogPosts() {
+            const blogPostsContainer = document.getElementById('blogPosts');
+            
+            blogPosts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('blog-post');
+                postElement.innerHTML = `
+                    <img class="blog-post-image" src="${post.image}" alt="${post.title}" loading="lazy">
+                    <h2>${post.title}</h2>
+                    <p>${post.excerpt}</p>
+                    <a href="#" class="read-more" data-index="${index}">Read More</a>
+                `;
+                
+                postElement.querySelector('.read-more').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showFullPost(index);
+                });
+                
+                blogPostsContainer.appendChild(postElement);
+            });
+        }
+
+        // Function to show full post in a modal
+        function showFullPost(index) {
+            const post = blogPosts[index];
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                opacity: 0;
+                animation: modalFadeIn 0.3s forwards;
+            `;
+
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    padding: 30px;
+                    border-radius: 20px;
+                    max-width: 700px;
+                    width: 90%;
+                    max-height: 80%;
+                    overflow-y: auto;
+                    transform: scale(0.7);
+                    animation: modalZoomIn 0.3s forwards;
+                ">
+                    <h2 style="margin-bottom: 20px;">${post.title}</h2>
+                    <img src="${post.image}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
+                    <p>${post.fullContent}</p>
+                    <button style="
+                        background: #2575fc;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 25px;
+                        margin-top: 20px;
+                        cursor: pointer;
+                    ">Close</button>
+                </div>
+            `;
+
+            modal.querySelector('button').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+
+            document.body.appendChild(modal);
+
+            // Add custom animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes modalFadeIn {
+                    to { opacity: 1; }
+                }
+                @keyframes modalZoomIn {
+                    to { transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize the blog
+        renderBlogPosts();
+
+        // Add 3D tilt effect to blog container
+        const blogContainer = document.getElementById('blogContainer');
+        blogContainer.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            const { left, top, width, height } = blogContainer.getBoundingClientRect();
+            
+            const centerX = left + width / 2;
+            const centerY = top + height / 2;
+            
+            const rotateX = (clientY - centerY) / 20;
+            const rotateY = -(clientX - centerX) / 20;
+            
+            blogContainer.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        blogContainer.addEventListener('mouseleave', () => {
+            blogContainer.style.transform = 'rotateX(0) rotateY(0)';
+        });
+    </script>
+</body>
+</html>
